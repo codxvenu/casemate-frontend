@@ -26,8 +26,11 @@ const ShareD = ({setShareShow,fileId,filename}) => {
     },[search])
     useEffect(()=>{
       if(!fileId || !filename) return
+      console.log(sharetype,fileId);
+      
       if(sharetype === "private"){
         setToken("")
+        setUrl("")
         revokeAccess()
       }
       if(!token) handleShare()
@@ -41,7 +44,7 @@ const ShareD = ({setShareShow,fileId,filename}) => {
       setSharetype(res?.data?.mode || "private")
     }
      async function revokeAccess(){
-        if(sharetype !== "private") 
+        if(sharetype !== "private")  return 
         await FileService.revokeAccess(fileId)
       return 
       }
@@ -52,6 +55,7 @@ const ShareD = ({setShareShow,fileId,filename}) => {
     }
   async function handleShare(){
     if(!["public","guest"].includes(sharetype)) return
+    setUrl("Loading...")
     const res = await FileService.updateShareStatus({fileId,sharetype,filename,allowedUser});
     if(res?.url) setUrl(res?.url)
     setLoading(false);
