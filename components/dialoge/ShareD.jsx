@@ -37,6 +37,8 @@ const ShareD = ({setShareShow,fileId,filename}) => {
     },[sharetype])
     async function getShareDetails() {
       const res = await FileService.getShareDetails(fileId)
+      console.log(res);
+      
       if(!res?.data) return
       setToken(res?.token || "")
       setUrl(process.env.NEXT_PUBLIC_BACKEND_URL+`/files/guest?token=${res?.token}` || "")
@@ -57,7 +59,7 @@ const ShareD = ({setShareShow,fileId,filename}) => {
     if(!["public","guest"].includes(sharetype)) return
     setUrl("Loading...")
     const res = await FileService.updateShareStatus({fileId,sharetype,filename,allowedUser});
-    if(res?.url) setUrl(res?.url)
+    if(res?.token) setUrl(process.env.NEXT_PUBLIC_BACKEND_URL+`/files/guest?token=${res?.token}`)
     setLoading(false);
     }
   return (
@@ -95,6 +97,7 @@ const ShareD = ({setShareShow,fileId,filename}) => {
        </span>
      </>
        }
+      
       { sharetype==="guest" &&
       <>
       <hr className='text-neutral-400 w-full mb-2'/>

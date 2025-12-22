@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { FileService } from "@/hook/apifetch";
 import { geist, inter } from "@/app/layout";
 import { handleSize } from "@/utility/lib/files";
+import axios from "axios";
+
 const UploadFile = ({
   handleCreateDir,
   setUploadShow,
@@ -45,6 +47,20 @@ const UploadFile = ({
     formData.append("file", upload);
     return formData;
   }
+  const uploadFile = async (formData) => {
+  await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    withCredentials : "include",
+    onUploadProgress: (progressEvent) => {
+      const percent = Math.round( 
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      console.log(`Upload progress: ${percent}%`);
+    },
+  });
+};
   async function handleUpload(files) {
     const upload = Array.from(files);
     if (!Array.isArray(upload)) return;
@@ -58,7 +74,7 @@ const UploadFile = ({
       FilteredFile.map((file) => {
 
         const Fileobj = CreateFileObject(file);
-        return FileService.addFile(CreateFormData(file))
+        return uploadFile(CreateFormData(file))
           .then((res) => ({ res, file: Fileobj }))
           .catch((err) => Promise.reject({ err, file: Fileobj }));
       })
