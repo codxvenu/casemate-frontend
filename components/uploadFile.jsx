@@ -59,6 +59,9 @@ const UploadFile = ({
       );
       console.log(`Upload progress: ${percent}%`);
     },
+    timeout : 0,       // disable timeout
+  maxContentLength: Infinity,
+  maxBodyLength: Infinity,
   });
 };
   async function handleUpload(files) {
