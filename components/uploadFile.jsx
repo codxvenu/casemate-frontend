@@ -8,6 +8,7 @@ import { FileService } from "@/hook/apifetch";
 import { geist, inter } from "@/app/layout";
 import { handleSize } from "@/utility/lib/files";
 import axios from "axios";
+import { fi } from "zod/v4/locales";
 
 const UploadFile = ({
   handleCreateDir,
@@ -35,19 +36,14 @@ const UploadFile = ({
     return fileObj;
   }
   function CreateFormData(upload) {
-    console.log(upload,"upload");
-    
     const formData = new FormData();
     const now = new Date().toISOString();
-    const fileData = {
-      originalName : upload.name,size : upload.size,created_at : now,folderId : CurrentFolderId}
-      console.log(fileData);
-      
+    const fileData = {originalName : upload.name,size : upload.size,created_at : now,folderId : CurrentFolderId}
     formData.append("fileData", JSON.stringify(fileData));
     formData.append("file", upload);
     return formData;
   }
-  const uploadFile = async (formData) => {
+  async function uploadFile(formData,filename){
   await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -57,7 +53,10 @@ const UploadFile = ({
       const percent = Math.round( 
         (progressEvent.loaded * 100) / progressEvent.total
       );
-      console.log(`Upload progress: ${percent}%`);
+      setFileList((prev) => {
+          return prev.map(i=>i.name === filename ? {...i,progress : percent} : {...i})
+      })
+      
     },
     timeout : 0,       // disable timeout
   maxContentLength: Infinity,
@@ -74,10 +73,9 @@ const UploadFile = ({
 
     const FilteredFile = upload.filter((i) => !CheckExits(i));
     const result = await Promise.allSettled(
-      FilteredFile.map((file) => {
-
+      FilteredFile.map((file)=> {
         const Fileobj = CreateFileObject(file);
-        return uploadFile(CreateFormData(file))
+        return uploadFile(CreateFormData(file),Fileobj?.name)
           .then((res) => ({ res, file: Fileobj }))
           .catch((err) => Promise.reject({ err, file: Fileobj }));
       })
@@ -118,7 +116,7 @@ function UFiles(key, file) {
         <span className="flex flex-col justify-between items-end">
           <X className="w-4 h-4 text-(--muted-forground) hover:text-(--text)" onClick={()=>setFileList((prev)=>prev.filter((i)=>i?.name !== file?.name))}/>
           <small className={`text-(--muted-forground) text-[12px]! relative group ${file?.status === "Completed" && "text-green-600"} ${file?.status === "Failed" && "text-red-600"}`}>
-            {file?.status}
+            {file?.status} {file?.progress !== 100 && file?.progress && `(${file?.progress}%)`}
             <small className="absolute top-4 text-[11px]! left-4 bg-black text-white p-1 px-2 group-hover:block hidden w-max h-max">{file?.error?.message}</small>
           </small>
         </span>
@@ -145,7 +143,7 @@ function UFiles(key, file) {
       }}
       className={`fixed top-1/2 -translate-1/2  w-full left-1/2 h-fit flex flex-col items-center justify-center z-[1000000]`}
     >
-      <div className="p-4 bg-white rounded-md">
+      <div className="p-4 bg-white rounded-md w-full max-w-[550px]">
         <h2 className="font-medium">File Upload</h2>
         <span
           className={`flex items-center justify-center gap-2 p-7 py-12 border-[1px] rounded-md border-gray-300 border-dashed mt-2 transition-all duration-300 ${
