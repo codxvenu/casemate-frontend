@@ -106,15 +106,15 @@ function UFiles(key, file) {
             <FileSpreadsheet className="w-5 h-5 text-blue-500" />{" "}
           </span>
           <span className="flex flex-col items-start justify-start">
-            <small className="font-medium text-[12px]!">{file?.name}</small>
+            <small className="font-medium text-[12px]! truncate w-[360px]">{file?.name}</small>
             <small className="text-(--muted-forground) text-[12px]!">
               {handleSize(file?.size)}
             </small>
           </span>
           {/* <div className="w-[80%] h-0.5 bg-blue-400 absolute bottom-0 left-0 rounded-md"></div> */}
         </div>
-        <span className="flex flex-col justify-between items-end">
-          <X className="w-4 h-4 text-(--muted-forground) hover:text-(--text)" onClick={()=>setFileList((prev)=>prev.filter((i)=>i?.name !== file?.name))}/>
+        <span className="flex flex-col justify-between items-end shrink-0">
+          <X className="w-4 h-4 text-(--muted-forground) hover:text-(--text) " onClick={()=>setFileList((prev)=>prev.filter((i)=>i?.name !== file?.name))}/>
           <small className={`text-(--muted-forground) text-[12px]! relative group ${file?.status === "Completed" && "text-green-600"} ${file?.status === "Failed" && "text-red-600"}`}>
             {file?.status} {file?.progress !== 100 && file?.progress && `(${file?.progress}%)`}
             <small className="absolute top-4 text-[11px]! left-4 bg-black text-white p-1 px-2 group-hover:block hidden w-max h-max">{file?.error?.message}</small>
