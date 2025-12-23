@@ -44,24 +44,28 @@ const UploadFile = ({
     return formData;
   }
   async function uploadFile(formData,filename){
-  await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    withCredentials : "include",
-    onUploadProgress: (progressEvent) => {
-      const percent = Math.round( 
-        (progressEvent.loaded * 100) / progressEvent.total
-      );
-      setFileList((prev) => {
-          return prev.map(i=>i.name === filename ? {...i,progress : percent} : {...i})
-      })
-      
-    },
-    timeout : 0,       // disable timeout
-  maxContentLength: Infinity,
-  maxBodyLength: Infinity,
-  });
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials : "include",
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round( 
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setFileList((prev) => {
+              return prev.map(i=>i.name === filename ? {...i,progress : percent} : {...i})
+          })
+          
+        },
+        timeout : 0,       // disable timeout
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      });
+    } catch (error) {
+      console.log("error raja babu",error)
+    }
 };
   async function handleUpload(files) {
     const upload = Array.from(files);
