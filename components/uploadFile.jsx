@@ -46,9 +46,6 @@ const UploadFile = ({
   async function uploadFile(formData,filename){
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
         withCredentials : true,
         onUploadProgress: (progressEvent) => {
           const percent = Math.round( 
