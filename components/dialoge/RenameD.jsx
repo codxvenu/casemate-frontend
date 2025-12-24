@@ -1,6 +1,7 @@
 import { FilePen, X } from 'lucide-react'
 import React, { useState } from 'react'
 import Loader from '../loader'
+import { parseFileName } from '@/utility/lib/files'
 
 const RenameD = ({handleRename,oldname,setRenameShow,loading}) => {
     const[newName,setNewName] = useState("")
@@ -23,8 +24,8 @@ const RenameD = ({handleRename,oldname,setRenameShow,loading}) => {
         {/* <label htmlFor="oldname" className='flex flex-col gap-1.5 items-start w-full'><h3>Old Name</h3><input type="text" placeholder={oldname} name="" id="" className='p-2 px-3 outline-0 shadow-sm rounded-sm w-full' disabled/></label> */}
         <label htmlFor="oldname" className='flex flex-col gap-1.5 items-start w-full relative'><h3>Name</h3><h3 className='text-red-500 absolute top-0 left-10'>*</h3> 
         <span className='grid grid-cols-[1fr_.2fr] w-full shadow-sm border-2 border-gray-200 rounded-md'>
-        <input type="text" value={newName} name="" id="" placeholder={oldname.split(".")[0]} onChange={(e)=>setNewName(e.target.value)} className='p-2 px-3 outline-0  w-full'/>
-        <input type="text" disabled value={oldname.split(".")[1]} className='p-2 px-3 outline-0   w-full  border-l-2 border-gray-300'/>
+        <input type="text" value={newName} name="" id="" placeholder={parseFileName(oldname)?.name} onChange={(e)=>setNewName(e.target.value)} className='p-2 px-3 outline-0  w-full'/>
+        <input type="text" disabled value={parseFileName(oldname)?.ext} className='p-2 px-3 outline-0   w-full  border-l-2 border-gray-300'/>
         </span>
         </label>
       <span className='flex gap-2 items-center justify-end w-full mt-2.5'>

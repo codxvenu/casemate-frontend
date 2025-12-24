@@ -32,8 +32,9 @@ const Gridview = ({files,selectedFiles,handleFileType,handleSize,handleSelection
                           }
                         </div>
 
-                        <div className="flex-1">
-                          <div className="font-medium text-sm truncate whitespace-nowrap overflow-hidden text-ellipsis w-32 capitalize">{item.originalName.split(".")[0]}</div>
+                        <div className="flex-1 relative">
+                          <div className="font-medium text-sm truncate whitespace-nowrap overflow-hidden text-ellipsis w-32 capitalize peer">{item.originalName.split("." )[0]}</div>
+                           <small className='absolute bottom-(35px) left-(55px) bg-black p-1 text-white w-max z-[10000] text-[10px]! rounded-xs peer-hover:block hidden'>{item.originalName}</small>
                           <div className="text-xs text-gray-400 truncate uppercase">{item.type}</div>
                         </div>
                       </div>

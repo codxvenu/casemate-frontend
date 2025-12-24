@@ -64,7 +64,7 @@ const UploadFile = ({
       maxBodyLength: Infinity,
       });
     } catch (error) {
-      console.log("error raja babu",error)
+      console.log("Upload error : ",error)
     }
 };
   async function handleUpload(files) {
