@@ -49,7 +49,7 @@ const UploadFile = ({
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials : "include",
+        withCredentials : true,
         onUploadProgress: (progressEvent) => {
           const percent = Math.round( 
             (progressEvent.loaded * 100) / progressEvent.total
